@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sales Forecasting System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h2>
+            <a href="{{ url_for('seed_demo_data') }}" class="btn btn-outline-info btn-sm">
+                <i class="fas fa-database me-1"></i> Generate Demo Data
+            </a>
+        </div>
+        <p class="text-muted">Overview of sales and forecasting metrics</p>
+    </div>
+</div>
+
+<!-- Stats Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Total Brands</h6>
+                        <h3 class="mb-0">{{ total_brands }}</h3>
+                    </div>
+                    <div class="icon-bg bg-primary bg-opacity-10 rounded-circle p-3">
+                        <i class="fas fa-tags text-primary fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Total Products</h6>
+                        <h3 class="mb-0">{{ total_products }}</h3>
+                    </div>
+                    <div class="icon-bg bg-success bg-opacity-10 rounded-circle p-3">
+                        <i class="fas fa-box-open text-success fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-1">Brands with Products</h6>
+                        <h3 class="mb-0">{{ brand_names|length }}</h3>
+                    </div>
+                    <div class="icon-bg bg-info bg-opacity-10 rounded-circle p-3">
+                        <i class="fas fa-chart-pie text-info fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <!-- Recent Sales Trend -->
+    <div class="col-lg-8 mb-4">
+        <div class="card border-0 shadow h-100">
+            <div class="card-header bg-transparent border-0">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Recent Sales Trend</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="recentSalesChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Brand Distribution -->
+    <div class="col-lg-4 mb-4">
+        <div class="card border-0 shadow h-100">
+            <div class="card-header bg-transparent border-0">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Product Distribution</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="brandDistributionChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Access Row -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow">
+            <div class="card-header bg-transparent border-0">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Access</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 bg-dark">
+                            <div class="card-body text-center p-4">
+                                <div class="display-4 mb-3 text-primary">
+                                    <i class="fas fa-box-open"></i>
+                                </div>
+                                <h5>Product Summary</h5>
+                                <p class="text-muted small">View all products with detailed statistics</p>
+                                <a href="{{ url_for('products') }}" class="btn btn-outline-primary mt-2">
+                                    <i class="fas fa-arrow-right me-1"></i> Go to Products
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 bg-dark">
+                            <div class="card-body text-center p-4">
+                                <div class="display-4 mb-3 text-success">
+                                    <i class="fas fa-balance-scale"></i>
+                                </div>
+                                <h5>Sales Comparison</h5>
+                                <p class="text-muted small">Compare actual vs forecasted sales data</p>
+                                <a href="{{ url_for('comparison') }}" class="btn btn-outline-success mt-2">
+                                    <i class="fas fa-arrow-right me-1"></i> View Comparison
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 bg-dark">
+                            <div class="card-body text-center p-4">
+                                <div class="display-4 mb-3 text-info">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h5>Generate Forecasts</h5>
+                                <p class="text-muted small">Create new forecasts for selected products</p>
+                                <a href="{{ url_for('comparison') }}" class="btn btn-outline-info mt-2">
+                                    <i class="fas fa-arrow-right me-1"></i> Create Forecast
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Data for Recent Sales Chart
+        const recentDates = {{ recent_dates|safe }};
+        const recentQuantities = {{ recent_quantities|safe }};
+        const recentRevenues = {{ recent_revenues|safe }};
+        
+        // Data for Brand Distribution Chart
+        const brandNames = {{ brand_names|safe }};
+        const brandCounts = {{ brand_counts|safe }};
+        
+        // Create Recent Sales Chart
+        createLineChart(
+            'recentSalesChart', 
+            recentDates.reverse(), 
+            [
+                {
+                    label: 'Quantity',
+                    data: recentQuantities.reverse(),
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    yAxisID: 'y',
+                },
+                {
+                    label: 'Revenue ($)',
+                    data: recentRevenues.reverse(),
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    yAxisID: 'y1',
+                }
+            ],
+            true
+        );
+        
+        // Create Brand Distribution Chart
+        createPieChart('brandDistributionChart', brandNames, brandCounts);
+    });
+</script>
+{% endblock %}

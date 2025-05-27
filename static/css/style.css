@@ -1,0 +1,176 @@
+/* Custom CSS for Sales Forecasting System */
+
+/* Colors */
+@import url('https://fonts.googleapis.com/css2?family=Anuphan&display=swap');
+
+:root {
+    --primary-color: #4e73df;
+    --secondary-color: #1cc88a;
+    --dark-bg: #1e1e2d;
+    --darker-bg: #191927;
+    --card-bg: #252636;
+    --text-color: #e0e0e0;
+    --border-color: #2e2e3e;
+    --hover-bg: #2a2a3a;
+}
+
+/* Base Styles */
+body {
+    background-color: var(--dark-bg);
+    font-family: 'Anuphan', sans-serif;
+    color: var(--text-color);
+}
+
+.content-container {
+    flex: 1;
+}
+
+.bg-dark {
+    background-color: var(--darker-bg) !important;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table {
+    color: var(--text-color);
+}
+
+.table-dark th {
+    background-color: var(--darker-bg) !important;
+}
+
+.form-control, .form-select {
+    background-color: var(--darker-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--darker-bg);
+    color: var(--text-color);
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.nav-link {
+    font-weight: 500;
+}
+
+/* Dashboard Components */
+.icon-bg {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card Hover Effects */
+.card a:hover {
+    transform: translateY(-3px);
+    transition: transform 0.3s ease;
+}
+
+/* Table adjustments */
+.table-hover tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Form elements */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-success {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+/* Login page */
+.card-header.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+/* Custom tab styling */
+.nav-tabs {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-color);
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: transparent;
+    background-color: var(--hover-bg);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-color);
+    background-color: transparent;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--darker-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .icon-bg {
+        width: 50px;
+        height: 50px;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}

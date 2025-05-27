@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    .select2-container--default .select2-selection--single {
+        border-radius: 8px !important;
+        padding: 0.3rem !important;
+        height: calc(2.4rem + 1px) !important;
+        background-color: rgba(28, 35, 51, 1) !important;
+    }
+
+    .select2-selection__clear {
+        color: white !important;
+        background-color: transparent !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 50% !important;
+        right: 7px !important;
+        transform: translateY(-50%) !important;
+    }   
+    
+    .select2-container--default .select2-dropdown {
+        background-color: rgba(28, 35, 51, 1) !important;
+        border-radius: 8px !important;
+        border: 1px solid #ced4da !important;/
+    }
+    
+    .select2-container--default .select2-results__option {
+        background-color: rgba(28, 35, 51, 1) !important;
+        color: white !important;
+    }
+    
+    .select2-container--default .select2-results__option--highlighted {
+        background-color: rgba(13, 110, 253, 0.25) !important;
+        color: #fff !important;
+    }
+
+    .select2-selection:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+    }
+
+    .select2-selection__rendered {
+        color: #fff !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #bfc4ca !important;
+    }
+
+    .content {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 370px;
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col">
+        <h2><i class="fas fa-balance-scale me-2"></i>Sales Comparison</h2>
+        <p class="text-muted">Detail forecasted sales</p>
+    </div>
+</div>
+
+<!-- Selection Form -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow">
+            <div class="card-header bg-transparent border-0">
+                <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Select Product</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="product" class="form-label">Product</label>
+                            <select class="form-select" id="product" name="product" required>
+                                <option value="">Select Product</option>
+                                {% for i in range(product|length) %}
+                                    <option value="{{ product[i] }}" {% if product[i] == selected_product %}selected{% endif %}>
+                                        {{ product[i] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="month" class="form-label">Month</label>
+                            <select class="form-select" id="month" name="month" required>
+                                <option value="">Select Month</option>
+                                {% for i in range(month|length) %}
+                                    <option value="{{ month[i] }}" {% if month[i] == selected_month %}selected{% endif %}>
+                                        {{ month[i] }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="year" class="form-label">Year</label>
+                            <select class="form-select" id="year" name="year" required>
+                                <option value="">Select Year</option>
+                                {% for year in year %}
+                                    <option value="{{ year.id }}" {% if year.id == selected_year %}selected{% endif %}>
+                                        {{ year.AS_Name_year }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-12 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i> Apply Filters
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if selected_product and results %}
+<!-- Comparison Charts -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 chart-title">
+                    <i class="fas fa-chart-bar me-2"></i>Sales Comparison for {{ selected_product.name }}
+                </h5>
+                <div>
+                    <span class="badge bg-primary me-2">Customer: {{ results|length }}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content p-3" id="comparisonTabsContent">
+                    <div class="tab-pane fade show active" id="quantity" role="tabpanel" aria-labelledby="quantity-tab">
+                        <div style="height: 400px;">
+                            <canvas id="myBarChart" width="600" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <div class="table-responsive content">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>No</th>
+                                <th>Customer</th>
+                                <th style="text-align: center;">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in results %}
+                                <tr>
+                                    <td style="vertical-align: top;">{{ loop.index }}</td>
+                                    <td style="vertical-align: top;">{{ row[0] }} | {{ row[1] }}</td>
+                                    <td style="text-align: center;">{{ "{:,.2f}".format(row[2]) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card border-0 shadow h-100">
+            <div class="card-header bg-primary bg-opacity-10 border-0">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Total</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Metric</th>
+                                <th class="text-end">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Total Forecasted Quantity</td>
+                                <td class="text-end" id="total-actual-quantity">{{ total_sum }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Customer</td>
+                                <td class="text-end" id="total-forecast-quantity">{{ results|length }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Sales</td>
+                                <td class="text-end" id="quantity-difference">{{ distinct_count }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% elif selected_product and not results %}
+<!-- No product selected message -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow">
+            <div class="card-body text-center p-5">
+                <div class="mb-3 text-muted">
+                    <i class="fas fa-exclamation-triangle fa-3x"></i>
+                </div>
+                <h4>No Product Forecasted</h4>
+                <p class="text-muted">There are no product in the system. Please generate demo data first.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- No brands message -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow">
+            <div class="card-body text-center p-5">
+                <div class="mb-3 text-muted">
+                    <i class="fas fa-chart-area fa-3x"></i>
+                </div>
+                <h4>Select a product to view sales comparison</h4>
+                <p class="text-muted">Choose a brand and product from the form above to view the comparison</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const chartData = {{ chart_data | tojson }};
+    
+    const ctx = document.getElementById('myBarChart').getContext('2d');
+    const myBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'Quantity',
+                data: chartData.data,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#product').select2({
+            placeholder: "-- Select Product --",
+            allowClear: true,
+            width: '100%'
+        });
+        $('#month').select2({
+            placeholder: "-- Select Month --",
+            allowClear: true,
+            width: '100%',
+            minimumResultsForSearch: Infinity
+        });
+        $('#year').select2({
+            placeholder: "-- Select Year --",
+            allowClear: true,
+            width: '100%',
+            minimumResultsForSearch: Infinity
+        });
+    });
+</script>
+{% endblock %}

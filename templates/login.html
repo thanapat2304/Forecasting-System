@@ -1,0 +1,58 @@
+{% extends "base_login.html" %}
+
+{% block title %}Forecasting System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header bg-primary text-white text-center py-3">
+                <h4 class="mb-0"><i class="fas fa-chart-line me-2"></i>Forecasting System</h4>
+            </div>
+            <div class="card-body p-4">
+                <h5 class="card-title text-center mb-4">Login to your account</h5>
+                
+                <form method="POST" action="{{ url_for('login') }}">
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            <i class="fas fa-user me-2"></i>Username
+                        </label>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Enter your username" style="font-size: 16px; padding: 14px; height: 45px;">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock me-2"></i>Password
+                        </label>
+                        <input type="password" name="password" id="password" value="" class="form-control" placeholder="Enter your password" style="font-size: 16px; padding: 14px; height: 45px;">
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Help Card -->
+        <div class="card mt-3 border-0 shadow">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-info-circle text-info me-3 fa-2x"></i>
+                    <div>
+                        <h6 class="mb-1">Login information</h6>
+                        <p class="mb-0 small">For testing, you can log in with an administrator account as follows:</p>
+                        <ul class="mb-0 mt-2">
+                            <li>User: <strong>admin</strong></li>
+                            <li>Password: <strong>Admin@123</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
