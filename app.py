@@ -5,7 +5,7 @@ from backend.product import import_product
 from backend.customer import import_customer
 
 app = Flask(__name__)
-app.secret_key = '86679f9154d781668b739b1fc8134674'
+app.secret_key = '000000000000000000'
 app.permanent_session_lifetime = timedelta(minutes=30)
 
 @app.route('/login', methods=['GET', 'POST'])
